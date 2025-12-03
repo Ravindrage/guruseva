@@ -6,27 +6,28 @@ use Facebook\Facebook;
 
 class FacebookController extends Controller
 {
-    public function postText()
-    {
+   public function postText()
+{
+    try {
+
         $fb = new Facebook([
-            'app_id' => config('services.facebook.app_id'),
-            'app_secret' => config('services.facebook.app_secret'),
+            'app_id' => env('FB_APP_ID'),
+            'app_secret' => env('FB_APP_SECRET'),
             'default_graph_version' => 'v17.0',
         ]);
 
-        try {
-            $response = $fb->post(
-                '/me/feed',
-                ['message' => 'Hello from Lumen Facebook Poster!'],
-                config('services.facebook.access_token')
-            );
+        $response = $fb->post(
+            '/me/feed',
+            ['message' => 'Hello from Lumen Facebook Poster!'],
+            env('FACEBOOK_ACCESS_TOKEN')
+        );
 
-            return $response->getDecodedBody();
+        return $response->getDecodedBody();
 
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
-        }
+    } catch (\Exception $e) {
+        return ['error' => $e->getMessage()];
     }
+}
 
 
     public function postImage()
